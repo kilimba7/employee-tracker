@@ -1,5 +1,7 @@
-//Connecting to the mysql database
+//Connecting to the mysql database and any other required module
 const mysql = require('mysql2');
+// call once somewhere in the beginning of the app
+const cTable = require('console.table');
 
 const db = mysql.createConnection(
     {
@@ -33,8 +35,7 @@ const userPrompt = () => {
 };
 
 
-// call once somewhere in the beginning of the app
-const cTable = require('console.table');
+
 console.table([
   {
     name: 'foo',
