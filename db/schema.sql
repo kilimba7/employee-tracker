@@ -1,8 +1,12 @@
-DROP TABLE IF EXISTS department;
-DROP TABLE IF EXISTS roles;
 DROP TABLE IF EXISTS employee;
+DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS department;
 
 
+ CREATE TABLE department (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(30) NOT NULL
+);
  
  CREATE TABLE roles (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -12,11 +16,6 @@ DROP TABLE IF EXISTS employee;
     CONSTRAINT fk_department FOREIGN KEY (department_id) REFERENCES department(id)
  ON DELETE SET NULL);
  
- CREATE TABLE department (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(30) NOT NULL
-);
-
 
  CREATE TABLE employee (
     id INT AUTO_INCREMENT PRIMARY KEY,
