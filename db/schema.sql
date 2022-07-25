@@ -15,9 +15,8 @@ DROP TABLE IF EXISTS department;
     department_id INT,
     CONSTRAINT fk_department FOREIGN KEY (department_id) REFERENCES department(id)
  ON DELETE SET NULL);
- 
 
- CREATE TABLE employee (
+  CREATE TABLE employee (
     id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(30) NOT NULL, 
     last_name VARCHAR(30) NOT NULL,
@@ -28,3 +27,24 @@ DROP TABLE IF EXISTS department;
     CONSTRAINT fk_manager FOREIGN KEY (manager_id) REFERENCES employee(id)
  ON DELETE SET NULL
  );
+ 
+-- Converts the department id into the department name 
+SELECT roles.*, department.name AS department_name
+FROM roles
+LEFT JOIN department ON roles.department_id = department.id;
+
+
+-- Converts the roles id into the name of the role 
+SELECT employee.*, roles.title AS company_role
+FROM employee
+LEFT JOIN roles ON employee.roles_id = roles.id;
+
+
+-- Converts the manager id into the name of employee who manages them
+SELECT employee.*, 
+CONCAT(employee.first_name, ' ', employee.last_name) AS manager_name
+FROM employee manager
+JOIN employee ON employee.manager_id = manager.id
+ORDER BY manager_id; 
+
+
