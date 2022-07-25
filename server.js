@@ -30,7 +30,7 @@ const userPrompt = () => {
         type: 'list',
         name: 'select',
         message: 'What would you like to do?',
-        choices: ['View All Employees', 'Add Employee', 'Updated Employee Role', 'View All Roles', 'Add Roles', 'View All Departments', 'Add Department', 'Update Department']
+        choices: ['View All Employees', 'Add Employee', 'Updated Employee Role', 'View All Roles', 'Add Roles', 'View All Departments', 'Add Department']
     },
     ])
     .then(val => {
@@ -105,18 +105,16 @@ const addEmployee = () => {
   name: 'manager_id',
   message: 'Who is your manager? (id)',
 },
-])
-.then(val => {
+]).then(val => {
   let params = [
     val.first_name,
     val.last_name,
     val.roles_id,
-    val.manager_id
-  ]
+    val.manager_id]
 
-let sql = `INSERT INTO employee (first_name, last_name, roles_id, manager_id)
-VALUES (?,?,?,?)`;
-  db.query(sql, params, (err, rows) => {
+    let sql = `INSERT INTO employee (first_name, last_name, roles_id, manager_id)
+    VALUES (?,?,?,?)`;
+    db.query(sql, params, (err, rows) => {
     console.table(rows);
     return userPrompt();
 
@@ -124,13 +122,24 @@ VALUES (?,?,?,?)`;
 });
 };
 
-
-// Updated employee role (need to come back to)
+// Update employee role
 const updateRole = () => {
-then(answer => {
-  let params = [
-    req.answer.roles_id, req.params.id];
-    
+return inquirer
+  .prompt([
+  {
+      type: 'list',
+      name: 'roles_employee',
+      message: 'Which employees do you want to update?',
+      choices: ['?']
+  },
+  {
+    type: 'list',
+    name: 'roles_type',
+    message: 'Which role do you want to assign to them?',
+    choices: ['?']
+},
+]).then(data => {
+let params = [data.roles_employee]
 
 let sql = `UPDATE roles SET roles_id = ? 
 WHERE id = ?`;
@@ -142,8 +151,6 @@ WHERE id = ?`;
 });
 };
   
-
-
 // View all roles
 const viewRoles = () => {
   db.query(`SELECT roles.id, roles.title, department.name AS department, roles.salary
@@ -154,44 +161,28 @@ const viewRoles = () => {
     return userPrompt();
     });
 };
-
-// Add role
-const addDepartment = () => {
-  return inquirer
-    .prompt([
-    {
-        type: 'input',
-        name: 'name',
-        message: 'What is your department name?',
-    },
-])
-.then(data => {
-  let params = [
-    data.name
-  ]
-
-let sql = `INSERT INTO department (name)
-VALUES (?)`;
-  db.query(sql, params, (err, rows) => {
-    console.table(rows);
-    return userPrompt();
-
-  });
-});
-};
-
-// View all departments
-const viewDepartments = () => {
-  db.query(`SELECT department.*
-  FROM department; `, 
-  (err, rows) => {
-    console.table(rows);
-    return userPrompt();
-    });
-};
-
-// Add department
+// Add roles
 const addRoles = () => {
+
+  console.table([
+    {
+      id: 1,
+      department: 'Engineering'
+    }, {
+      id: 2,
+      department: 'Finance'
+    },{
+      id: 3,
+      department: 'Legal'
+    },{
+      id: 4,
+      department: 'Sales'
+    },{
+      id: 5,
+      department: 'Other'
+    }
+  ]);
+  
   return inquirer
     .prompt([
     {
@@ -205,9 +196,10 @@ const addRoles = () => {
       message: 'What is your salary?',
   },
   {
-    type: 'input',
+    type: 'list',
     name: 'department_id',
-    message: 'What is your department (id 1-4)?',
+    message: 'What is your department?',
+    choices: [1, 2, 3, 4, 5]
 },
 ])
 .then(answer => {
@@ -227,7 +219,36 @@ VALUES (?,?,?)`;
 });
 };
 
+// View all departments
+const viewDepartments = () => {
+  db.query(`SELECT department.*
+  FROM department; `, 
+  (err, rows) => {
+    console.table(rows);
+    return userPrompt();
+    });
+};
 
+// Add department
+const addDepartment = () => {
+  return inquirer
+    .prompt([
+    {
+        type: 'input',
+        name: 'name',
+        message: 'What is your department name?',
+    },
+]).then(data => {
+  let params = [data.name]
+  let sql = `INSERT INTO department (name)
+  VALUES (?)`;
+  db.query(sql, params, (err, rows) => {
+    console.table(rows);
+    return userPrompt();
+
+  });
+});
+};
 
 
 userPrompt();
