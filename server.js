@@ -31,7 +31,7 @@ const userPrompt = () => {
         type: 'list',
         name: 'select',
         message: 'What would you like to do?',
-        choices: ['View All Employees', 'Add Employee', 'Updated Employee Role', 'View All Roles', 'Add Role', 'View All Departments', 'Add Department', 'Update Department']
+        choices: ['View All Employees', 'Add Employee', 'Updated Employee Role', 'View All Roles', 'Add Roles', 'View All Departments', 'Add Department', 'Update Department']
     },
     ])
     .then(val => {
@@ -52,7 +52,7 @@ const userPrompt = () => {
         viewRoles();
         break;
 
-        case 'Add Role':
+        case 'Add Roles':
         addRoles();
         break;
 
@@ -130,10 +130,6 @@ VALUES (?,?,?,?)`;
 };
 
 
-
-
-
-
 // Updated employee role
 const updateRole = () => {
   db.query(`` ,
@@ -164,12 +160,28 @@ const viewRoles = () => {
 };
 
 // Add role
-const addRoles = () => {
-  db.query(`jj` ,
-  (err, rows) => {
+const addDepartment = () => {
+  return inquirer
+    .prompt([
+    {
+        type: 'input',
+        name: 'name',
+        message: 'What is your department name?',
+    },
+])
+.then(data => {
+  let params = [
+    data.name
+  ]
+
+let sql = `INSERT INTO department (name)
+VALUES (?)`;
+  db.query(sql, params, (err, rows) => {
     console.table(rows);
     return userPrompt();
-    });
+
+  });
+});
 };
 
 // View all departments
@@ -183,12 +195,40 @@ const viewDepartments = () => {
 };
 
 // Add department
-const addDepartment = () => {
-  db.query(`jj` ,
-  (err, rows) => {
+const addRoles = () => {
+  return inquirer
+    .prompt([
+    {
+        type: 'input',
+        name: 'roles_title',
+        message: 'What is your title?',
+    },
+    {
+      type: 'input',
+      name: 'roles_salary',
+      message: 'What is your salary?',
+  },
+  {
+    type: 'input',
+    name: 'department_id',
+    message: 'What is your department (id 1-4)?',
+},
+])
+.then(answer => {
+  let params = [
+    answer.roles_title,
+    answer.roles_salary,
+    answer.department_id
+  ]
+
+let sql = `INSERT INTO roles (title, salary, department_id)
+VALUES (?,?,?)`;
+  db.query(sql, params, (err, rows) => {
     console.table(rows);
     return userPrompt();
-    });
+
+  });
+});
 };
 
 // Update department
