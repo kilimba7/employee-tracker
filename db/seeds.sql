@@ -13,15 +13,15 @@ VALUES
 ('Software Engineer', 120000, 1),
 ('Account Manager', 160000, 2),
 ('Accountant', 125000, 2 ),
-('Manager', 250000, 3),
+('Legal Team Lead', 250000, 3),
 ('Lawyer', 190000, 3);
 
 INSERT INTO employee (first_name, last_name, roles_id, manager_id)
 VALUES
   ('Ronald', 'Firbank', 1, NULL),
-  ('Virginia', 'Wolf', 2 , 2),
+  ('Virginia', 'Wolf', 2 , 1),
   ('Piers', 'Morgan', 3, 2),
-  ('Charles', 'Cheese', 4, 2),
+  ('Charles', 'Cheese', 4, 3),
   ('Butcher', 'Benny', 4, 4),
   ('Doe', 'John', 1, 5),
   ('Washington', 'Booker', 2, 6),
