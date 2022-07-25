@@ -23,7 +23,6 @@ const db = mysql.createConnection(
 );
 
 
-
 const userPrompt = () => {
     return inquirer
     .prompt([
@@ -62,10 +61,6 @@ const userPrompt = () => {
 
         case 'Add Department':
         addDepartment();
-        break;
-
-        case 'Update Department':
-        updateDepartment();
         break;
 
         default:
@@ -130,22 +125,23 @@ VALUES (?,?,?,?)`;
 };
 
 
-// Updated employee role
+// Updated employee role (need to come back to)
 const updateRole = () => {
-  db.query(`` ,
-  (err, rows) => {
-    console.table(rows);
-    });
-};
+then(answer => {
+  let params = [
+    req.answer.roles_id, req.params.id];
+    
 
-// const sql = `UPDATE candidates SET party_id = ? 
-//                WHERE id = ?`;
-//   const params = [req.body.party_id, req.params.id];
-//   db.query(sql, params, (err, result) => {
-//     if (err) {
-//       res.status(400).json({ error: err.message });
-//     }
-//   });
+let sql = `UPDATE roles SET roles_id = ? 
+WHERE id = ?`;
+  db.query(sql, params, (err, rows) => {
+    console.table(rows);
+    return userPrompt();
+
+  });
+});
+};
+  
 
 
 // View all roles
@@ -229,15 +225,6 @@ VALUES (?,?,?)`;
 
   });
 });
-};
-
-// Update department
-const updateDepartment = () => {
-  db.query(`jj` ,
-  (err, rows) => {
-    console.table(rows);
-    return userPrompt();
-    });
 };
 
 
