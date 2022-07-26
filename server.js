@@ -71,10 +71,21 @@ const userPrompt = () => {
 
 // View all employees
 const viewEmployees = () => {
-  db.query(`SELECT employee.id, employee.first_name, employee.last_name, employee.roles_id,
+  db.query(`SELECT employee.id, employee.first_name, employee.last_name, roles.title, department.name AS department, roles.salary,
   CONCAT(manager.first_name, ' ', manager.last_name) AS manager
+  
   FROM employee manager
-  RIGHT JOIN employee ON employee.manager_id = manager.id; `, 
+
+    RIGHT JOIN employee
+    ON employee.manager_id = manager.id
+  
+    LEFT JOIN roles
+    ON employee.roles_id = roles.id 
+  
+    LEFT JOIN department
+    ON roles.department_id = department.id
+  
+  ; `, 
   (err, rows) => {
     console.table(rows);
     return userPrompt();
@@ -130,27 +141,31 @@ return inquirer
       type: 'list',
       name: 'roles_employee',
       message: 'Which employees do you want to update?',
-      choices: ['?']
+      choices: [1, 2, 3, 4, 5, 6, 7, 8]
   },
   {
     type: 'list',
     name: 'roles_type',
     message: 'Which role do you want to assign to them?',
-    choices: ['?']
+    choices: [1, 2, 3]
 },
-]).then(data => {
-let params = [data.roles_employee]
+]).then(val => {
+  let params = [
+    val.employee_id,
+    val.params]
 
-let sql = `UPDATE roles SET roles_id = ? 
-WHERE id = ?`;
-  db.query(sql, params, (err, rows) => {
+    let sql = `UPDATE roles SET employee_id = ? 
+    WHERE id = ?
+    `;
+    db.query(sql, params, (err, rows) => {
     console.table(rows);
     return userPrompt();
 
   });
 });
 };
-  
+
+
 // View all roles
 const viewRoles = () => {
   db.query(`SELECT roles.id, roles.title, department.name AS department, roles.salary
@@ -160,29 +175,11 @@ const viewRoles = () => {
     console.table(rows);
     return userPrompt();
     });
-};
+};  
+
 // Add roles
 const addRoles = () => {
-
-  console.table([
-    {
-      id: 1,
-      department: 'Engineering'
-    }, {
-      id: 2,
-      department: 'Finance'
-    },{
-      id: 3,
-      department: 'Legal'
-    },{
-      id: 4,
-      department: 'Sales'
-    },{
-      id: 5,
-      department: 'Other'
-    }
-  ]);
-  
+  let departmentChoice = [];
   return inquirer
     .prompt([
     {
@@ -197,20 +194,23 @@ const addRoles = () => {
   },
   {
     type: 'list',
-    name: 'department_id',
+    name: 'department_choice',
     message: 'What is your department?',
-    choices: [1, 2, 3, 4, 5]
+    choices: departmentChoice
 },
+  
 ])
 .then(answer => {
   let params = [
     answer.roles_title,
     answer.roles_salary,
-    answer.department_id
+    answer.department_choice
   ]
 
 let sql = `INSERT INTO roles (title, salary, department_id)
-VALUES (?,?,?)`;
+VALUES (?,?,?)`
+;
+
   db.query(sql, params, (err, rows) => {
     console.table(rows);
     return userPrompt();
