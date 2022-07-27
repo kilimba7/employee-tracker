@@ -4,6 +4,7 @@ const inquirer = require('inquirer');
 // call once somewhere in the beginning of the app
 const cTable = require('console.table');
 
+
 console.log(
   `
   ---------------------------
@@ -17,7 +18,7 @@ const db = mysql.createConnection(
         host: 'localhost',
         // my sql username
         user: 'root',
-        password: '',
+        password: 'Random!7',
         database: 'tracker'
     },
 );
@@ -140,21 +141,22 @@ return inquirer
   {
       type: 'list',
       name: 'roles_employee',
-      message: 'Which employees do you want to update?',
-      choices: [1, 2, 3, 4, 5, 6, 7, 8]
+      message: 'Which employee do you want to update?',
+      choices: [1, 2, 3, 4, 5]
   },
   {
     type: 'list',
-    name: 'roles_type',
+    name: 'roles_id',
     message: 'Which role do you want to assign to them?',
-    choices: [1, 2, 3]
+    choices: [1, 2, 3, 4, 5]
 },
 ]).then(val => {
   let params = [
-    val.employee_id,
-    val.params]
+    val.roles_id,
+    val.roles_employee
+    ]
 
-    let sql = `UPDATE roles SET employee_id = ? 
+    let sql = `UPDATE employee SET roles_id = ?
     WHERE id = ?
     `;
     db.query(sql, params, (err, rows) => {
@@ -168,7 +170,7 @@ return inquirer
 
 // View all roles
 const viewRoles = () => {
-  db.query(`SELECT roles.id, roles.title, department.name AS department, roles.salary
+  db.query(`SELECT roles.id, roles.title, roles.salary, department.name AS department
   FROM roles
   LEFT JOIN department ON roles.department_id = department.id; `, 
   (err, rows) => {
@@ -179,7 +181,7 @@ const viewRoles = () => {
 
 // Add roles
 const addRoles = () => {
-  let departmentChoice = [];
+  
   return inquirer
     .prompt([
     {
@@ -193,24 +195,21 @@ const addRoles = () => {
       message: 'What is your salary?',
   },
   {
-    type: 'list',
+    type: 'input',
     name: 'department_choice',
-    message: 'What is your department?',
-    choices: departmentChoice
-},
-  
+    message: 'Select department by id',
+  },
 ])
 .then(answer => {
   let params = [
     answer.roles_title,
     answer.roles_salary,
-    answer.department_choice
+    answer.department_choice,
   ]
 
 let sql = `INSERT INTO roles (title, salary, department_id)
-VALUES (?,?,?)`
-;
-
+VALUES (?,?,?)
+`;
   db.query(sql, params, (err, rows) => {
     console.table(rows);
     return userPrompt();
