@@ -134,6 +134,16 @@ const addEmployee = () => {
 });
 };
 
+const viewChoices = () => {
+  db.query(`SELECT employee.last_name, roles.title FROM employee JOIN roles ON employee.roles_id = roles.id;`, 
+  (err, rows) => {
+    console.table(rows);
+    return;
+    });
+};
+
+
+
 // Update employee role
 const updateRole = () => {
 return inquirer
@@ -142,13 +152,13 @@ return inquirer
       type: 'list',
       name: 'roles_employee',
       message: 'Which employee do you want to update?',
-      choices: [1, 2, 3, 4, 5]
+      choices: [1, 2, 3, 4, 5, 6, 7, 8]
   },
   {
     type: 'list',
     name: 'roles_id',
     message: 'Which role do you want to assign to them?',
-    choices: [1, 2, 3, 4, 5]
+    choices: [1, 2, 3, 4, 5, 6, 7, 8]
 },
 ]).then(val => {
   let params = [
